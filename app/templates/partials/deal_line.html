@@ -1,0 +1,12 @@
+<div class="item">
+  <div><a href="/deals/{{ d.id }}"><b>{{ d.company }}</b></a> <span class="muted small">· {{ d.contact }}</span>
+    <div class="small">{{ d.next_step or 'No next step set' }}</div></div>
+  <div style="text-align:right">
+    {% if d.due_in is not none %}
+      {% if d.due_in < 0 %}<span class="chip due">{{ -d.due_in }} day{{ "s" if -d.due_in != 1 }} overdue</span>
+      {% elif d.due_in == 0 %}<span class="chip due">Today</span>
+      {% else %}<span class="chip soon">{{ "tomorrow" if d.due_in == 1 else "in " ~ d.due_in ~ " days" }}</span>{% endif %}
+    {% endif %}
+    <div class="small muted">{{ d.value|money }} · {{ d.stage }}</div>
+  </div>
+</div>

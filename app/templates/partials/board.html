@@ -1,0 +1,21 @@
+<div class="board" id="board">
+{% for stage, ds in columns.items() %}
+  <section class="col" aria-label="{{ stage }}">
+    <h3>{{ stage }} <span class="muted">{{ ds|length }}</span></h3>
+    <p class="tot">{{ totals[stage]|money }}{% if stage not in ['Won','Lost'] %} · {{ (prob[stage]*100)|int }}% likely{% endif %}</p>
+    {% for d in ds %}
+      <article class="card s{{ stages.index(d.stage) }}">
+        <a href="/deals/{{ d.id }}">{{ d.company }}</a>
+        <div class="co">{{ d.title }}</div>
+        <div class="val">{{ d.value|money }}</div>
+        {% if d.due_in is not none and d.stage not in ['Won','Lost'] %}
+          <span class="chip {{ 'due' if d.due_in <= 0 else 'soon' if d.due_in <= 3 else '' }}">{{ d.next_step }} · {{ 'today' if d.due_in == 0 else (-d.due_in ~ 'd overdue') if d.due_in < 0 else 'in ' ~ d.due_in ~ 'd' }}</span>
+        {% endif %}
+        <select name="stage" aria-label="Move {{ d.company }} to stage" hx-post="/deals/{{ d.id }}/move" hx-trigger="change" hx-target="#board" hx-swap="outerHTML">
+          {% for s in stages %}<option {{ 'selected' if s == d.stage }}>{{ s }}</option>{% endfor %}
+        </select>
+      </article>
+    {% endfor %}
+  </section>
+{% endfor %}
+</div>

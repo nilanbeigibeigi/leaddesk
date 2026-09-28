@@ -1,0 +1,10 @@
+{% if e.source == 'template' %}<p class="note">The AI isn't available right now, so this is a standard template. Edit it before sending.</p>
+{% else %}<p class="note">AI draft. Check every sentence before sending.</p>{% endif %}
+<div class="stack" style="display:grid;gap:12px;margin-top:12px">
+  <label>Subject<input id="subj" value="{{ e.subject }}" dir="auto"></label>
+  <label>Message<textarea id="body" dir="auto" {% if language=='Farsi' %}style="font-family:Vazirmatn,Tahoma,sans-serif"{% endif %}>{{ e.body }}</textarea></label>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn" href="{{ mailto }}">Open in my email</a>
+    <button class="btn ghost" type="button" onclick="navigator.clipboard.writeText(document.getElementById('body').value).then(()=>{this.textContent='Copied'})">Copy message</button>
+  </div>
+</div>

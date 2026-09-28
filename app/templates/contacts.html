@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}Contacts{% endblock %}
+{% block main %}
+<h1>Contacts</h1>
+<p class="sub">Every business you've talked to. Sample data — all names and companies are fictional.</p>
+<div class="panel scroll">
+  <table><tr><th>Company</th><th>Contact</th><th>Source</th><th>Language</th><th>Deals</th><th>Won</th></tr>
+  {% for c in contacts %}<tr><td><b>{{ c.company }}</b></td><td>{{ c.name }}<div class="muted small">{{ c.email or '' }}</div></td>
+    <td>{{ c.source }}</td><td>{{ c.language }}</td><td>{{ c.deals }}</td><td>{{ c.won|money }}</td></tr>{% endfor %}
+  </table>
+</div>
+<div class="panel" id="add"><h2>Add a lead</h2>
+  <form class="stack" method="post" action="/contacts">
+    <div class="two">
+      <label>Contact name<input name="name" required></label>
+      <label>Business name<input name="company" required></label>
+      <label>Email<input type="email" name="email"></label>
+      <label>How did they find you?<select name="source">{% for s in sources %}<option>{{ s }}</option>{% endfor %}</select></label>
+      <label>Preferred language<select name="language"><option>English</option><option value="Farsi">Farsi (فارسی)</option></select></label>
+      <label>First follow-up on<input type="date" name="next_step_on" value="{{ soon }}"></label>
+      <label>What do they need?<input name="title" required placeholder="e.g. Website with online booking"></label>
+      <label>Service<select name="service">{% for s in services %}<option>{{ s }}</option>{% endfor %}</select></label>
+      <label>Estimated value ($)<input type="number" name="value" min="0" step="50" value="0"></label>
+    </div>
+    <div><button class="btn" type="submit">Add lead</button></div>
+  </form>
+</div>
+{% endblock %}

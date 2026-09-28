@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}LeadDesk{% endblock %} · LeadDesk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Vazirmatn:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/htmx.min.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="logo" href="/"><i></i>LeadDesk</a>
+  <nav aria-label="Main">
+    <a href="/" {% if page=='dash' %}aria-current="page"{% endif %}>Follow-ups</a>
+    <a href="/pipeline" {% if page=='pipeline' %}aria-current="page"{% endif %}>Pipeline</a>
+    <a href="/contacts" {% if page=='contacts' %}aria-current="page"{% endif %}>Contacts</a>
+  </nav>
+  <a class="btn new" href="/contacts#add">Add lead</a>
+</div></header>
+<main>{% block main %}{% endblock %}</main>
+</body>
+</html>

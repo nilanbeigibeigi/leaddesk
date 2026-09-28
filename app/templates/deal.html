@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% block title %}{{ d.company }}{% endblock %}
+{% block main %}
+<p><a href="/pipeline">← Pipeline</a></p>
+<h1>{{ d.company }}</h1>
+<p class="sub">{{ d.contact }}{% if d.email %} · <a href="mailto:{{ d.email }}">{{ d.email }}</a>{% endif %} · prefers {{ d.language }} · came from {{ d.source }}</p>
+<div class="cols">
+  <div>
+    <div class="panel">
+      <h2>{{ d.title }}</h2>
+      <p><span class="chip ok">{{ d.stage }}</span> <b>{{ d.value|money }}</b> <span class="muted">· {{ d.service }}</span></p>
+      <form class="stack" method="post" action="/deals/{{ d.id }}/next-step">
+        <div class="two">
+          <label>Next step<input name="next_step" value="{{ d.next_step or '' }}" placeholder="e.g. Send quote"></label>
+          <label>When<input type="date" name="next_step_on" value="{{ d.next_step_on or '' }}"></label>
+        </div>
+        <div><button class="btn ghost" type="submit">Save next step</button></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>History</h2>
+      <form class="stack" hx-post="/deals/{{ d.id }}/activities" hx-target="#timeline" hx-swap="afterbegin" hx-on::after-request="if(event.detail.successful) this.reset()">
+        <div class="two">
+          <label>Type<select name="kind"><option>Call</option><option>Email</option><option>Meeting</option><option>Instagram</option><option>Note</option></select></label>
+          <label>What happened<input name="note" required placeholder="e.g. Asked for a quote by Friday"></label>
+        </div>
+        <div><button class="btn" type="submit">Add to history</button></div>
+      </form>
+      <ul class="tl" id="timeline" style="margin-top:14px">
+        {% for a in acts %}{% include "partials/activity.html" %}{% else %}{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="panel draft">
+    <h2>Draft a follow-up email</h2>
+    <p class="muted small">Uses this deal's history. You read and edit it, then send it from your own email.</p>
+    <form class="stack" hx-post="/deals/{{ d.id }}/draft" hx-target="#draft" hx-indicator="#writing">
+      <label>Language<select name="language">
+        <option {{ 'selected' if d.language=='English' }}>English</option>
+        <option value="Farsi" {{ 'selected' if d.language=='Farsi' }}>Farsi (فارسی)</option></select></label>
+      <div><button class="btn" type="submit">Write draft</button> <span id="writing" class="htmx-indicator muted">Writing…</span></div>
+    </form>
+    <div id="draft" style="margin-top:16px"></div>
+  </div>
+</div>
+{% endblock %}

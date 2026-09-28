@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block title %}Follow-ups{% endblock %}
+{% block main %}
+<h1>Who to follow up with</h1>
+<p class="sub">Most small-business deals are lost to a forgotten follow-up, not to a competitor. Sample data — all contacts are fictional.</p>
+<div class="kpis">
+  <div class="kpi"><b>{{ pipeline|money }}</b><span>open pipeline ({{ open_count }} deals)</span></div>
+  <div class="kpi"><b>{{ weighted|money }}</b><span>expected value, weighted by stage</span></div>
+  <div class="kpi"><b>{{ won_month|money }}</b><span>won this month</span></div>
+  <div class="kpi"><b>{{ win_rate if win_rate is not none else '—' }}{% if win_rate is not none %}%{% endif %}</b><span>win rate on closed deals</span></div>
+</div>
+<div class="cols">
+  <div class="panel"><h2>Due today or overdue ({{ due|length }})</h2>
+    {% for d in due %}{% include "partials/deal_line.html" %}{% else %}<p class="muted">Nothing overdue. Nice.</p>{% endfor %}
+  </div>
+  <div class="panel"><h2>Coming up this week ({{ upcoming|length }})</h2>
+    {% for d in upcoming %}{% include "partials/deal_line.html" %}{% else %}<p class="muted">Nothing planned for the next 7 days.</p>{% endfor %}
+  </div>
+</div>
+<div class="cols">
+  <div class="panel"><h2>Gone quiet: no contact in 14+ days ({{ quiet|length }})</h2>
+    {% for d in quiet %}<div class="item"><div><a href="/deals/{{ d.id }}"><b>{{ d.company }}</b></a><div class="small">{{ d.title }}</div></div>
+      <span class="chip soon">{{ d.quiet_days }} days quiet</span></div>{% else %}<p class="muted">Every open deal was touched in the last two weeks.</p>{% endfor %}
+  </div>
+  <div class="panel"><h2>Open deals with no next step ({{ no_step|length }})</h2>
+    {% for d in no_step %}{% include "partials/deal_line.html" %}{% else %}<p class="muted">Every open deal has a next step.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}
